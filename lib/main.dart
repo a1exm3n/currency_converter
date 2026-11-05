@@ -74,6 +74,31 @@ class _ConverterScreenState extends State<ConverterScreen> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: theme.colorScheme.primary, width: 2),
+              ),
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter Amount to Convert',
+                    ),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true), // add decimals
+                    onChanged: (String value) {
+                      setState(() {
+                        _amount = double.tryParse(value) ?? 0.0;
+                      }); // Facilitates updating the converted amount upon input change
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
