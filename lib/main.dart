@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'My Currency Converter',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 0, 115, 255),
+          seedColor: const Color.fromARGB(255, 255, 225, 0),
         ),
       ),
       home: const ConverterScreen(),
@@ -35,7 +35,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   // Add default values for the converter
   String _fromCurrency = 'USD';
   String _toCurrency = 'EUR';
-  double _amount = 100.0;
+  double _amount = 0.0;
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -56,30 +56,33 @@ class _ConverterScreenState extends State<ConverterScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.inversePrimary,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Text('Converted Amount', style: style),
-                Text(
-                  '${convertedAmount?.toStringAsFixed(2) ?? '-'} $_toCurrency', //adding the maount and the currency code, handle null
-                  style: style.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontSize: theme.textTheme.displaySmall?.fontSize,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Text('Converted Amount', style: style),
+                  Text(
+                    '${convertedAmount?.toStringAsFixed(2) ?? '-'} $_toCurrency', //adding the maount and the currency code, handle null
+                    style: style.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: theme.textTheme.displaySmall?.fontSize,
+                    ),
                   ),
-                ),
-                Text(
-                  '1 $_fromCurrency = ${exchangeRate?.toStringAsFixed(4) ?? '-'} $_toCurrency', //also handles null case
-                  style: style.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontSize: theme.textTheme.bodyMedium?.fontSize,
+                  Text(
+                    '1 $_fromCurrency = ${exchangeRate?.toStringAsFixed(4) ?? '-'} $_toCurrency', //also handles null case
+                    style: style.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: theme.textTheme.bodyMedium?.fontSize,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
