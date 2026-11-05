@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:currency_converter/logic/currency_converter.dart';
+import 'package:currency_converter/data/exchange_rates.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +14,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Currency Converter',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 115, 255)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 0, 115, 255),
+        ),
       ),
       home: const ConverterScreen(),
     );
   }
 }
+
 // Create the necessary classes using lab 2 as a reference
-class ConverterScreen extends StatefulWidget { 
+class ConverterScreen extends StatefulWidget {
   const ConverterScreen({super.key});
 
   @override
@@ -33,7 +37,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   String _toCurrency = 'EUR';
   double _amount = 100.0;
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     var theme = Theme.of(context);
     final style = theme.textTheme.titleMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
@@ -41,10 +45,14 @@ class _ConverterScreenState extends State<ConverterScreen> {
     );
 
     double? exchangeRate = getExchangeRate(_fromCurrency, _toCurrency);
-    double? convertedAmount = convertCurrency(_fromCurrency, _toCurrency, _amount);
-    
+    double? convertedAmount = convertCurrency(
+      _fromCurrency,
+      _toCurrency,
+      _amount,
+    );
+
     return Scaffold(
-      appBar: AppBar(title:const Text('My Currency Converter')),
+      appBar: AppBar(title: const Text('My Currency Converter')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -88,12 +96,65 @@ class _ConverterScreenState extends State<ConverterScreen> {
                       border: OutlineInputBorder(),
                       labelText: 'Enter Amount to Convert',
                     ),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true), // add decimals
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ), // add decimals
                     onChanged: (String value) {
                       setState(() {
                         _amount = double.tryParse(value) ?? 0.0;
                       }); // Facilitates updating the converted amount upon input change
                     },
+                  ),
+                  // Adding currency selection from dropdown
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Dropdown for selecting the "from" currency. Source: exchangeRates.keys
+                      DropdownButton<String>(
+                        value: _fromCurrency,
+                        items: exchangeRates.keys.map((String currency) {
+                          return DropdownMenuItem<String>(
+                            value: currency,
+                            child: Text(currency),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _fromCurrency = newValue;
+                            });
+                          }
+                        },
+                      ),
+                      // Add a swap button to swtich from and to conversion
+                      IconButton(
+                        icon: const Icon(Icons.swap_horiz),
+                        onPressed: () {
+                          setState(() {
+                            final temp = _fromCurrency;
+                            _fromCurrency = _toCurrency;
+                            _toCurrency = temp;
+                          });
+                        },
+                      ),
+                      // Add dropdown for selecting to currewncy
+                      DropdownButton<String>(
+                        value: _toCurrency,
+                        items: exchangeRates.keys.map((String currency) {
+                          return DropdownMenuItem<String>(
+                            value: currency,
+                            child: Text(currency),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _toCurrency = newValue;
+                            });
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -104,4 +165,3 @@ class _ConverterScreenState extends State<ConverterScreen> {
     );
   }
 }
-
